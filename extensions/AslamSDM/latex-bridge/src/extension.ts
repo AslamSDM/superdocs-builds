@@ -66,7 +66,7 @@ export function activate(context: vscode.ExtensionContext): void {
         const root = findLaTeXRoot(projectDir);
         if (!root) {
           throw new Error(
-            "No LaTeX root found. Expected main.tex, a % !TEX root directive, or a single .tex file."
+            "No LaTeX document root found. Pick the project folder that directly contains the .tex file with \\documentclass and \\begin{document} (e.g. samples/math-paper, not samples)."
           );
         }
         const proj: ProjectInfo = await buildProjectZip(projectDir, root);

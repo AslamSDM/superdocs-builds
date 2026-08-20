@@ -99,6 +99,12 @@ npm run build
 - Math (`data-latex`), citations (`\cite{...}`), footnotes (`\footnote{...}`) and
   section headings are serialized back to LaTeX losslessly.
 
+## Demo
+
+Try it with the ready-made sample project in this folder (`samples/math-paper`) or clone
+the demo repo: **<https://github.com/AslamSDM/latex-bridge-demo>** — it contains the extension
+source, a prebuilt `.vsix`, a sample LaTeX project, and a step-by-step testing walkthrough.
+
 ## License
 
 MIT

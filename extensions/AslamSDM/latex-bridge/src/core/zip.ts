@@ -45,9 +45,21 @@ export function findLaTeXRoot(dir: string): string | null {
     if (magic) return magic;
   }
   for (const candidate of ROOT_CANDIDATES) {
-    if (texFiles.includes(candidate)) return candidate;
+    if (texFiles.includes(candidate) && isDocumentRoot(path.join(dir, candidate))) {
+      return candidate;
+    }
   }
-  return texFiles.length === 1 ? texFiles[0] : null;
+  const roots = texFiles.filter((f) => isDocumentRoot(path.join(dir, f)));
+  return roots.length === 1 ? roots[0] : null;
+}
+
+function isDocumentRoot(texPath: string): boolean {
+  try {
+    const content = fs.readFileSync(texPath, "utf8");
+    return content.includes("\\documentclass") && content.includes("\\begin{document}");
+  } catch {
+    return false;
+  }
 }
 
 function listTexFiles(dir: string): string[] {
@@ -75,6 +87,15 @@ function readMagicTexRoot(texPath: string): string | null {
 }
 
 export async function buildProjectZip(dir: string, rootFile: string): Promise<ProjectInfo> {
+  // If the root file lives in a subfolder (e.g. a parent folder was picked),
+  // re-root the archive at the root file's directory so the document root is
+  // at the top level of the zip and no sibling content is uploaded.
+  const rootDir =
+    rootFile.includes("/") || rootFile.includes("\\")
+      ? path.resolve(dir, path.dirname(rootFile))
+      : dir;
+  const rootName = rootFile.includes("/") || rootFile.includes("\\") ? path.basename(rootFile) : rootFile;
+
   const files: string[] = [];
   const walk = (d: string) => {
     for (const entry of fs.readdirSync(d, { withFileTypes: true })) {
@@ -83,19 +104,19 @@ export async function buildProjectZip(dir: string, rootFile: string): Promise<Pr
       if (entry.isDirectory()) walk(full);
       else if (entry.name === ".DS_Store") continue;
       else if (IGNORED_EXTENSIONS.has(path.extname(entry.name).toLowerCase())) continue;
-      else files.push(path.relative(dir, full));
+      else files.push(path.relative(rootDir, full));
     }
   };
-  walk(dir);
+  walk(rootDir);
   files.sort();
 
   const zip = new JSZip();
   for (const rel of files) {
-    zip.file(rel, fs.readFileSync(path.join(dir, rel)));
+    zip.file(rel, fs.readFileSync(path.join(rootDir, rel)));
   }
   const zipBytes = await zip.generateAsync({ type: "uint8array" });
   return {
-    rootFile,
+    rootFile: rootName,
     files,
     zipBytes,
     sizeBytes: zipBytes.byteLength,
