@@ -24,7 +24,13 @@
     "commands": [
       {
         "command": "latex-bridge.open",
-        "title": "LaTeX Bridge: Open SuperDocs Session"
+        "title": "LaTeX Bridge: Open SuperDocs Session",
+        "icon": "media/icon.svg"
+      },
+      {
+        "command": "latex-bridge.focus",
+        "title": "LaTeX Bridge: Focus Chat",
+        "icon": "media/icon.svg"
       },
       {
         "command": "latex-bridge.uploadProject",
@@ -43,6 +49,25 @@
         "title": "LaTeX Bridge: Import Co-author Tracked Changes (.docx)"
       }
     ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "latex-bridge",
+          "title": "LaTeX Bridge",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "latex-bridge": [
+        {
+          "type": "webview",
+          "id": "latexBridge.chat",
+          "name": "Chat",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
     "configuration": {
       "title": "LaTeX Bridge",
       "properties": {
@@ -78,7 +103,9 @@
     "@types/react": "^18.3.0",
     "@types/react-dom": "^18.3.0",
     "@types/vscode": "^1.90.0",
+    "@vscode/test-electron": "^3.1.0",
     "esbuild": "^0.24.0",
+    "jsdom": "^29.1.1",
     "jszip": "^3.10.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

@@ -3,6 +3,7 @@ dist/
 extension/
 data/
 *.vsix
+.vscode-test/
 .DS_Store
 *.aux
 *.bbl

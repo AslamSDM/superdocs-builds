@@ -50,7 +50,8 @@ code --install-extension latex-bridge-0.1.0.vsix
 
 | Command | What it does |
 | --- | --- |
-| `LaTeX Bridge: Open SuperDocs Session` | Opens the webview panel (project picker, chat edit, review, export). |
+| `LaTeX Bridge: Open SuperDocs Session` | Focuses the LaTeX Bridge chat sidebar (project picker, chat edit, review, export). |
+| `LaTeX Bridge: Focus Chat` | Focuses the LaTeX Bridge chat sidebar. |
 | `LaTeX Bridge: Upload Project to SuperDocs` | Uploads the current project folder without opening the panel. |
 | `LaTeX Bridge: Export Word Document` | Exports the session document as `.docx`. |
 | `LaTeX Bridge: Write Approved Edits Back to .tex` | Applies accepted edits to the `.tex` sources. |
@@ -70,10 +71,16 @@ never in the repository.
 ### Tests
 
 ```bash
-npm test        # unit tests (fixture-driven, no live API calls)
+npm test        # unit + UI tests (fixture-driven, no live API calls)
 npm run typecheck
 npm run build
 ```
+
+Tests cover the API client, zip/root discovery, HITL session, write-back patching,
+tracked-changes import, the React webview (jsdom, fixture payloads), and a real
+extension-host boot check (`@vscode/test-electron`) that activates the extension and
+asserts every command is registered. The live smoke tests are opt-in with
+`SUPERDOCS_LIVE_SMOKE=1`.
 
 ## What SuperDocs features it uses
 
@@ -99,12 +106,12 @@ npm run build
 - Math (`data-latex`), citations (`\cite{...}`), footnotes (`\footnote{...}`) and
   section headings are serialized back to LaTeX losslessly.
 
+## License
+
+MIT
+
 ## Demo
 
 Try it with the ready-made sample project in this folder (`samples/math-paper`) or clone
 the demo repo: **<https://github.com/AslamSDM/latex-bridge-demo>** — it contains the extension
 source, a prebuilt `.vsix`, a sample LaTeX project, and a step-by-step testing walkthrough.
-
-## License
-
-MIT

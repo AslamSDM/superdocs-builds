@@ -107,6 +107,15 @@ export class SuperDocsClient {
     return body;
   }
 
+  async signup(agentName: string): Promise<{ api_key: string; quota: QuotaInfo }> {
+    const { body } = await this.request<{ api_key: string; quota: QuotaInfo }>(
+      "POST",
+      "/v1/agents/signup",
+      { terms_accepted: true, agent_name: agentName }
+    );
+    return body;
+  }
+
   async requestUploadUrl(req: UploadUrlRequest): Promise<UploadUrlResponse> {
     const { body } = await this.request<UploadUrlResponse>("POST", "/v1/uploads", req);
     return body;
